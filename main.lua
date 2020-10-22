@@ -135,11 +135,9 @@ function love.update(dt)
 		end
 		
 		if peliJatkuu then
-			table.insert(mato, 1, {x = seuraavaX, y = seuraavaY})
+			table.insert(mato, 1, {x = seuraavaX, y = seuraavaY})	
 		
-		
-		
-			if mato[1].x == ruoka.x and mato[1],y == ruoka.y then 
+			if mato[1].x == ruoka.x and mato[1].y == ruoka.y then 
 				ruoki()
 				
 				if aikaraja > 0.2 then
