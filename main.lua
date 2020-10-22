@@ -20,16 +20,30 @@ function reset()
 	
 	suunta = 'right'
 	ajastin = 0
+	aikaraja = 0.15
 	
-	
+	ruoki()
 	
 	
 end
 
+function ruoki()
 
+	ruoka = {}
+	
+	ruokaX = love.math.random(1,leveys)
+	ruokaY = love.math.random(1,korkeus)
+	
+	ruoka.x = ruokaX
+	ruoka.y = ruokaY
+
+
+
+end
 
 
 function love.draw()
+
 	local ruutu = 15
 
 	love.graphics.setColor(.28,.28,.28)
@@ -44,6 +58,18 @@ function love.draw()
 	
 	
 	end
+
+
+	love.graphics.setColor(1,.3,.3)
+	piirräRuutu(ruoka.x, ruoka.y)
+
+
+
+
+
+
+
+
 
 	for indeksi , matopala in ipairs(mato) do
 	
@@ -61,29 +87,106 @@ end
 
 function love.update(dt)
 
-	local seuraavaX = mato[1].x
-	local seuraavaY = mato[1].y
+	ajastin = ajastin + dt
 
-	if suunta == 'right' then
-		seuraavaX = seuraavaX + 1
+	if ajastin >= aikaraja then
+
+		ajastin = ajastin - aikaraja
 		
-		if seuraavaX > leveys then
+
+		local seuraavaX = mato[1].x
+		local seuraavaY = mato[1].y
+
+		peliJatkuu = true
+
+
+		if suunta == 'right' then
+			seuraavaX = seuraavaX + 1
+			
+			if seuraavaX > leveys then
+				--gameover
+				peliJatkuu = false
+			end
+			
+		elseif suunta == 'left' then
+			seuraavaX = seuraavaX -1
+		
+			if seuraavaX < 1 then
+				--gameover
+				peliJatkuu = false
+			end
+		
+		elseif suunta == 'down' then
+			seuraavaY = seuraavaY + 1
+			
+			if seuraavaY > korkeus then
+				--gameover
+				peliJatkuu = false
+			end
+		
+		elseif suunta == 'up' then
+			seuraavaY = seuraavaY -1
+			
+			if seuraavaY < 1 then
+				--gameover
+				peliJatkuu = false
+			end
+		
+		end
+		
+		if peliJatkuu then
+			table.insert(mato, 1, {x = seuraavaX, y = seuraavaY})
+		
+		
+		
+			if mato[1].x == ruoka.x and mato[1],y == ruoka.y then 
+				ruoki()
+				
+				if aikaraja > 0.2 then
+					aikaraja = aikaraja - 0.1
+				end
+				
+			else
+		
+			table.remove(mato)
+			end
+		
+		end
+		
+		
+	end
+
+end
+
+	function love.keypressed(key)
+
+		if key == 'right' and peliJatkuu == true and suunta ~= 'left' then
+			suunta = 'right'
+		
+		elseif key == 'left' and peliJatkuu == true and suunta~= 'right' then
 			suunta = 'left'
 			
-		end
+		elseif key == 'up' and peliJatkuu == true and suunta ~= 'down' then
+			suunta = 'up'
 		
-	elseif suunta == 'left' then
-		seuraavaX = seuraavaX -1
-	
-		if seuraavaX < 1 then
-			suunta = 'right'
+		elseif key == 'down' and peliJatkuu == true and suunta ~= 'up' then
+			suunta = 'down'
+		
 		end
+	
 	end
+		
+		
+		
+		
 	
-	table.insert(mato, 1, {x = seuraavaX, y = seuraavaY})
-	table.remove(mato)
-	
-	
-end
+		
+
+
+
+
+
+
+
 
 
