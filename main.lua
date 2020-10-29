@@ -21,7 +21,7 @@ function reset()
 	suunta = 'right'
 	ajastin = 0
 	aikaraja = 0.15
-	
+	pisteet = 1
 	ruoki()
 	
 	
@@ -34,9 +34,28 @@ function ruoki()
 	ruokaX = love.math.random(1,leveys)
 	ruokaY = love.math.random(1,korkeus)
 	
-	ruoka.x = ruokaX
-	ruoka.y = ruokaY
+	local voiRuokkia = true
+	
+	for indeksi, matopala in ipairs(mato) do
+		
+		if ruokaX == matopala.x and ruokaY == matopala.y then
+			voiRuokkia = false
+		
+		end
+	
+	end
+	
 
+	if voiRuokkia then
+	
+		ruoka.x = ruokaX
+		ruoka.y = ruokaY
+	
+	
+	else
+		ruoki()
+	
+	end
 
 
 end
@@ -65,12 +84,6 @@ function love.draw()
 
 
 
-
-
-
-
-
-
 	for indeksi , matopala in ipairs(mato) do
 	
 		love.graphics.setColor(0.6, 0.9, 0.32)
@@ -78,7 +91,7 @@ function love.draw()
 	
 	end
 	
-	
+	love.graphics.print(pisteet,(leveys - 1) * ruutu, 0)
 	
 	
 	
@@ -134,10 +147,19 @@ function love.update(dt)
 		
 		end
 		
+		for indeksi, matopala in ipairs(mato) do
+			if indeksi ~=#mato and seuraavaX == matopala.x and seuraavaY == matopala.y then
+			peliJatkuu = false
+			
+			end
+		
+		end
+		
 		if peliJatkuu then
 			table.insert(mato, 1, {x = seuraavaX, y = seuraavaY})	
 		
-			if mato[1].x == ruoka.x and mato[1].y == ruoka.y then 
+			if mato[1].x == ruoka.x and mato[1].y == ruoka.y then
+				pisteet = pisteet + 1
 				ruoki()
 				
 				if aikaraja > 0.2 then
@@ -170,7 +192,13 @@ end
 		elseif key == 'down' and peliJatkuu == true and suunta ~= 'up' then
 			suunta = 'down'
 		
+		elseif key == 'return' then
+			reset()
+		
 		end
+	
+		
+	
 	
 	end
 		
